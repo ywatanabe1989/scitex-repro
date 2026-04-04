@@ -45,6 +45,9 @@ all = ["torch", "tensorflow", "jax", "jaxlib"]
 [project.entry-points."scitex_dev.docs"]
 scitex-repro = "scitex_repro"
 
+[project.entry-points."scitex_dev.skills"]
+scitex-repro = "scitex_repro"
+
 [project.urls]
 Homepage = "https://github.com/ywatanabe1989/scitex-repro"
 Repository = "https://github.com/ywatanabe1989/scitex-repro.git"
