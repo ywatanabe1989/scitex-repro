@@ -7,16 +7,29 @@ name = "scitex-repro"
 version = "0.1.0"
 description = "Reproducibility utilities (random state, timestamps, hashing)"
 readme = "README.md"
-license = "MIT"
-requires-python = ">=3.9"
+license = "AGPL-3.0"
+requires-python = ">=3.10"
 authors = [
-    { name = "Yusuke Watanabe" },
+    { name = "Yusuke Watanabe", email = "ywatanabe@scitex.ai" },
+]
+keywords = [
+    "reproducibility",
+    "random-state",
+    "hashing",
+    "timestamps",
+    "scientific",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Environment :: Console",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
@@ -29,6 +42,26 @@ tensorflow = ["tensorflow"]
 jax = ["jax", "jaxlib"]
 all = ["torch", "tensorflow", "jax", "jaxlib"]
 
+[project.entry-points."scitex_dev.docs"]
+scitex-repro = "scitex_repro"
+
 [project.urls]
 Homepage = "https://github.com/ywatanabe1989/scitex-repro"
-Repository = "https://github.com/ywatanabe1989/scitex-repro"
+Repository = "https://github.com/ywatanabe1989/scitex-repro.git"
+Issues = "https://github.com/ywatanabe1989/scitex-repro/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scitex_repro"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
