@@ -52,3 +52,8 @@ rule and empirical verification table.
 - [02_python-api.md](02_python-api.md) — full public symbol table with signatures
 
 No CLI, no MCP tools.
+
+
+## Environment
+
+- [03_env-vars.md](03_env-vars.md) — SCITEX_* env vars read by scitex-repro at runtime
