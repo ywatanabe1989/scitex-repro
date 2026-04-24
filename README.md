@@ -2,6 +2,8 @@
 
 Reproducibility utilities for SciTeX: random state management, ID generation, timestamps, and array hashing.
 
+> **Interfaces:** Python ⭐⭐⭐ (primary) · CLI — · MCP — · Skills ⭐⭐ · Hook — · HTTP —
+
 ## Problem and Solution
 
 
