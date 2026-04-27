@@ -1,5 +1,16 @@
 # scitex-repro
 
+<!-- scitex-badges:start -->
+[![PyPI](https://img.shields.io/pypi/v/scitex-repro.svg)](https://pypi.org/project/scitex-repro/)
+[![Python](https://img.shields.io/pypi/pyversions/scitex-repro.svg)](https://pypi.org/project/scitex-repro/)
+[![Tests](https://github.com/ywatanabe1989/scitex-repro/actions/workflows/test.yml/badge.svg)](https://github.com/ywatanabe1989/scitex-repro/actions/workflows/test.yml)
+[![Install Test](https://github.com/ywatanabe1989/scitex-repro/actions/workflows/install-test.yml/badge.svg)](https://github.com/ywatanabe1989/scitex-repro/actions/workflows/install-test.yml)
+[![Coverage](https://codecov.io/gh/ywatanabe1989/scitex-repro/graph/badge.svg)](https://codecov.io/gh/ywatanabe1989/scitex-repro)
+[![Docs](https://readthedocs.org/projects/scitex-repro/badge/?version=latest)](https://scitex-repro.readthedocs.io/en/latest/)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+<!-- scitex-badges:end -->
+
+
 Reproducibility utilities for SciTeX: random state management, ID generation, timestamps, and array hashing.
 
 > **Interfaces:** Python ⭐⭐⭐ (primary) · CLI — · MCP — · Skills ⭐⭐ · Hook — · HTTP —
