@@ -48,6 +48,7 @@ torch = [
     "torch",
 ]
 dev = [
+    "scitex-dev",
     "pytest",
     "pytest-cov",
     "ruff",
