@@ -37,10 +37,33 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-torch = ["torch"]
-tensorflow = ["tensorflow"]
-jax = ["jax", "jaxlib"]
-all = ["torch", "tensorflow", "jax", "jaxlib"]
+jax = [
+    "jax",
+    "jaxlib",
+]
+tensorflow = [
+    "tensorflow",
+]
+torch = [
+    "torch",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+docs = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+    "myst-parser>=2.0",
+    "sphinx-copybutton>=0.5",
+    "sphinx-autodoc-typehints>=1.25",
+]
+all = [
+    "scitex-repro[jax]",
+    "scitex-repro[tensorflow]",
+    "scitex-repro[torch]",
+]
 
 [project.entry-points."scitex_dev.docs"]
 scitex-repro = "scitex_repro"
