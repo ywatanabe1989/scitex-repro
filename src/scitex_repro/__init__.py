@@ -63,4 +63,12 @@ __all__ = [
     "fix_seeds",
 ]
 
-__version__ = "0.1.1"
+try:
+    from importlib.metadata import version as _v, PackageNotFoundError
+    try:
+        __version__ = _v("scitex-repro")
+    except PackageNotFoundError:
+        __version__ = "0.0.0+local"
+    del _v, PackageNotFoundError
+except ImportError:  # pragma: no cover — only on ancient Pythons
+    __version__ = "0.0.0+local"
