@@ -9,6 +9,8 @@ Provides tools for reproducible scientific computing:
 - Array hashing (hash_array)
 """
 
+from __future__ import annotations
+
 # ID and timestamp utilities
 from ._gen_ID import gen_ID, gen_id
 from ._gen_timestamp import gen_timestamp, timestamp
@@ -48,6 +50,7 @@ def fix_seeds(
 
 
 __all__ = [
+    "__version__",
     # ID and timestamp utilities
     "gen_ID",
     "gen_id",
