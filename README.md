@@ -72,7 +72,9 @@ fingerprint = hash_array(data)
 
 ## Part of SciTeX
 
-`scitex-repro` is part of [**SciTeX**](https://scitex.ai).
+`scitex-repro` is part of [**SciTeX**](https://scitex.ai). Install via
+the umbrella with `pip install scitex[repro]` to use as
+`scitex.repro` (Python).
 
 >Four Freedoms for Research
 >
