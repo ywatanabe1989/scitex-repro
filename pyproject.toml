@@ -75,6 +75,7 @@ scitex-repro = "scitex_repro"
 Homepage = "https://github.com/ywatanabe1989/scitex-repro"
 Repository = "https://github.com/ywatanabe1989/scitex-repro.git"
 Issues = "https://github.com/ywatanabe1989/scitex-repro/issues"
+Documentation = "https://scitex-repro.readthedocs.io"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/scitex_repro"]
