@@ -1,6 +1,7 @@
 ---
 name: scitex-repro-env-vars
 description: Environment variables read by scitex-repro at import / runtime. Follow SCITEX_<MODULE>_* convention — see general/10_arch-environment-variables.md.
+tags: [scitex-repro, scitex-package]
 ---
 
 # scitex-repro — Environment Variables

@@ -1,3 +1,9 @@
+---
+name: python-api
+description: scitex-repro — Python API — see file body for details.
+tags: [scitex-repro, scitex-package]
+---
+
 <!-- 02_python-api.md -->
 
 # scitex-repro — Python API

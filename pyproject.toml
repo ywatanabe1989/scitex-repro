@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "scitex-repro"
-version = "0.1.2"
+version = "0.1.4"
 description = "Reproducibility utilities (random state, timestamps, hashing)"
 readme = "README.md"
 license = "AGPL-3.0-only"
@@ -23,7 +23,6 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -37,10 +36,34 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-torch = ["torch"]
-tensorflow = ["tensorflow"]
-jax = ["jax", "jaxlib"]
-all = ["torch", "tensorflow", "jax", "jaxlib"]
+jax = [
+    "jax",
+    "jaxlib",
+]
+tensorflow = [
+    "tensorflow",
+]
+torch = [
+    "torch",
+]
+dev = [
+    "scitex-dev",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+docs = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+    "myst-parser>=2.0",
+    "sphinx-copybutton>=0.5",
+    "sphinx-autodoc-typehints>=1.25",
+]
+all = [
+    "scitex-repro[jax]",
+    "scitex-repro[tensorflow]",
+    "scitex-repro[torch]",
+]
 
 [project.entry-points."scitex_dev.docs"]
 scitex-repro = "scitex_repro"
@@ -52,6 +75,7 @@ scitex-repro = "scitex_repro"
 Homepage = "https://github.com/ywatanabe1989/scitex-repro"
 Repository = "https://github.com/ywatanabe1989/scitex-repro.git"
 Issues = "https://github.com/ywatanabe1989/scitex-repro/issues"
+Documentation = "https://scitex-repro.readthedocs.io"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/scitex_repro"]
@@ -68,3 +92,6 @@ target-version = "py310"
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
 ignore = ["E501"]
+
+[tool.scitex-linter]
+library_dirs = ["src", "tests", "examples"]
