@@ -49,7 +49,7 @@ print(gen_ID(), hash_array(data))
 
 ## 1 Interfaces
 
-<details>
+<details open>
 <summary><strong>Python API</strong></summary>
 
 <br>
