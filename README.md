@@ -74,7 +74,7 @@ fingerprint = hash_array(data)
 
 `scitex-repro` is part of [**SciTeX**](https://scitex.ai). Install via
 the umbrella with `pip install scitex[repro]` to use as
-`scitex.repro` (Python).
+`scitex.repro` (Python) or `scitex repro ...` (CLI).
 
 >Four Freedoms for Research
 >
