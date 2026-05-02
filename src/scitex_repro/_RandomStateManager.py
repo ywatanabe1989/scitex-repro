@@ -110,8 +110,12 @@ class RandomStateManager:
                 fixed_modules.append("torch+cuda")
             else:
                 fixed_modules.append("torch")
-        except ImportError:
-            pass
+        except Exception as e:
+            # ImportError: torch not installed (silent skip).
+            # Anything else (e.g. CUDA driver mismatch, broken install): log
+            # at debug and skip. Auto-seed is best-effort — a misconfigured
+            # ML runtime should never block @stx.session for non-ML users.
+            logger.debug(f"torch seed skipped: {type(e).__name__}: {e}")
 
         # TensorFlow
         try:
@@ -119,8 +123,12 @@ class RandomStateManager:
 
             tf.random.set_seed(self.seed)
             fixed_modules.append("tensorflow")
-        except ImportError:
-            pass
+        except Exception as e:
+            # ImportError: tf not installed.
+            # google.protobuf.runtime_version.VersionError: gencode/runtime
+            #   protobuf mismatch — surfaced once, then swallowed so the
+            #   rest of session.start can proceed.
+            logger.debug(f"tensorflow seed skipped: {type(e).__name__}: {e}")
 
         # JAX (deferred import to avoid circular imports)
         try:
