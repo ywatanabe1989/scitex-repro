@@ -228,8 +228,12 @@
                 <span class="n">fixed_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;torch+cuda&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fixed_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># ImportError: torch not installed (silent skip).</span>
+            <span class="c1"># Anything else (e.g. CUDA driver mismatch, broken install): log</span>
+            <span class="c1"># at debug and skip. Auto-seed is best-effort — a misconfigured</span>
+            <span class="c1"># ML runtime should never block @stx.session for non-ML users.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torch seed skipped: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># TensorFlow</span>
         <span class="k">try</span><span class="p">:</span>
@@ -237,8 +241,12 @@
 
             <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
             <span class="n">fixed_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;tensorflow&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># ImportError: tf not installed.</span>
+            <span class="c1"># google.protobuf.runtime_version.VersionError: gencode/runtime</span>
+            <span class="c1">#   protobuf mismatch — surfaced once, then swallowed so the</span>
+            <span class="c1">#   rest of session.start can proceed.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tensorflow seed skipped: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># JAX (deferred import to avoid circular imports)</span>
         <span class="k">try</span><span class="p">:</span>
