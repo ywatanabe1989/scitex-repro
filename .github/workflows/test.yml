@@ -27,6 +27,15 @@ jobs:
           pip install --upgrade pip
           pip install pytest pytest-cov pytest-timeout
           pip install -e ".[dev]" || pip install -e .
+      - name: Lint with scitex-linter (non-fatal)
+        # TODO: flip `continue-on-error: false` once existing EH001 / other
+        # violations are addressed. Initially rolled out as advisory so the
+        # new STX-EH001 rule (and other future rules) does not break CI
+        # overnight. See scitex-linter feat/eh001-narrow-import-except.
+        continue-on-error: true
+        run: |
+          pip install scitex-linter || pip install git+https://github.com/ywatanabe1989/scitex-linter@develop
+          scitex-linter check src/
       - name: Detect import name
         id: pkg
         run: |
