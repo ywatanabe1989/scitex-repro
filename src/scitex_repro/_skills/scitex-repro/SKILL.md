@@ -50,12 +50,13 @@ rule and empirical verification table.
 
 ## Sub-skills
 
-- [01_quick-start.md](01_quick-start.md) — install, import, one snippet per area
-- [02_python-api.md](02_python-api.md) — full public symbol table with signatures
+- [01_installation.md](01_installation.md) — pip install + verify
+- [02_quick-start.md](02_quick-start.md) — install, import, one snippet per area
+- [03_python-api.md](03_python-api.md) — full public symbol table with signatures
 
 No CLI, no MCP tools.
 
 
 ## Environment
 
-- [03_env-vars.md](03_env-vars.md) — SCITEX_* env vars read by scitex-repro at runtime
+- [10_env-vars.md](10_env-vars.md) — SCITEX_* env vars read by scitex-repro at runtime
