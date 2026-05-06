@@ -47,10 +47,14 @@ torch = [
     "torch",
 ]
 dev = [
-    "scitex-dev",
+    "jax",
+    "jaxlib",
     "pytest",
     "pytest-cov",
     "ruff",
+    "scitex-dev",
+    "tensorflow",
+    "torch",
 ]
 docs = [
     "sphinx>=7.0",
