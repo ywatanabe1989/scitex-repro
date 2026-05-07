@@ -143,6 +143,22 @@ class RandomStateManager:
             self._jax_key = None
             pass
 
+        # Importing TensorFlow / PyTorch during the framework-seeding pass
+        # can consume numpy global entropy on first init (lazy variable
+        # creation, autotune probes). The first RandomStateManager(seed=N)
+        # then leaves numpy at state(seed=N + K_init); a second call leaves
+        # it at state(seed=N) because TF/torch are already imported and
+        # K_init = 0. That asymmetry breaks `np.allclose(a, b)` across two
+        # construction sites in user code (see examples/quickstart.py).
+        # Re-seeding numpy as the last step normalises the post-init state
+        # to seed=N regardless of whether frameworks were just imported.
+        try:
+            import numpy as _np
+
+            _np.random.seed(self.seed)
+        except ImportError:
+            pass
+
         if verbose and fixed_modules:
             logger.info(f"Fixed random seeds for: {', '.join(fixed_modules)}")
 
