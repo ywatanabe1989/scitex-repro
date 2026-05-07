@@ -39,14 +39,16 @@
 pip install scitex-repro
 ```
 
-## Quick Start
+## Architecture
 
-```python
-from scitex_repro import RandomStateManager, gen_ID, hash_array
-
-rng = RandomStateManager(seed=42)
-data = rng("data").random(100)
-print(gen_ID(), hash_array(data))
+```
+src/scitex_repro/
+├── __init__.py              # public re-exports
+├── _RandomStateManager.py   # cross-framework RNG seeding (random / numpy / torch / tf)
+├── _gen_ID.py               # 20260423_2155_<hash> directory IDs
+├── _gen_timestamp.py        # filesystem-safe timestamps
+├── _hash_array.py           # deterministic NumPy / pandas fingerprints
+└── _config.py               # env-var + config defaults
 ```
 
 ## 1 Interfaces
@@ -71,6 +73,33 @@ fingerprint = hash_array(data)
 ```
 
 </details>
+
+## Demo
+
+```mermaid
+flowchart LR
+    seed["seed=42"] --> rsm["RandomStateManager"]
+    rsm --> py["random"]
+    rsm --> np["numpy"]
+    rsm --> torch["torch (cpu+cuda)"]
+    rsm --> tf["tensorflow"]
+    rsm --> hashenv["PYTHONHASHSEED"]
+    rsm --> data["rng('data').random(100)"]
+    data --> fp["hash_array(data)"]
+    rsm --> id["gen_ID()"]
+    id --> dir[("20260423_2155_abc12345/")]
+    fp --> integrity[("array fingerprint")]
+```
+
+## Quick Start
+
+```python
+from scitex_repro import RandomStateManager, gen_ID, hash_array
+
+rng = RandomStateManager(seed=42)
+data = rng("data").random(100)
+print(gen_ID(), hash_array(data))
+```
 
 ## Part of SciTeX
 
