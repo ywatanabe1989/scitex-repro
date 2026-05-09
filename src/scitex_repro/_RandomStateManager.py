@@ -319,14 +319,15 @@ class RandomStateManager:
         except ImportError:
             pass
 
-        # TensorFlow tensor
+        # TensorFlow tensor — catch any import-time failure (protobuf
+        # runtime version mismatch raises VersionError, not ImportError).
         try:
             import tensorflow as tf
 
             if isinstance(obj, (tf.Tensor, tf.Variable)):
                 obj_np = obj.numpy()
                 return hashlib.sha256(obj_np.tobytes()).hexdigest()[:32]
-        except ImportError:
+        except Exception:
             pass
 
         # JAX array
@@ -476,8 +477,11 @@ class RandomStateManager:
         """
         try:
             import torch
-        except ImportError:
-            raise ImportError("PyTorch not installed")
+        except Exception as e:
+            # ImportError: torch not installed.
+            # Anything else (e.g. CUDA driver mismatch, broken install)
+            # surfaces with the original message so the user can diagnose.
+            raise ImportError(f"PyTorch unavailable: {type(e).__name__}: {e}")
 
         if not hasattr(self, "_torch_generators"):
             self._torch_generators = {}
