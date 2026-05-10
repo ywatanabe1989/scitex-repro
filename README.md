@@ -9,7 +9,7 @@
 <p align="center"><b>Reproducibility utilities — RNG seeding, ID generation, timestamps, array hashing.</b></p>
 
 <p align="center">
-  <a href="https://scitex-repro.readthedocs.io/">Full Documentation</a> · <code>pip install scitex-repro</code>
+  <a href="https://scitex-repro.readthedocs.io/">Full Documentation</a> · <code>uv pip install scitex-repro[all]</code>
 </p>
 
 <!-- scitex-badges:start -->
