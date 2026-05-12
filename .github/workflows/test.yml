@@ -1,4 +1,4 @@
-name: Test
+name: Tests
 
 on:
   push:
@@ -15,7 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        # 3.10 dropped — zarr>=3 (transitively pulled by some peers)
+        # requires 3.11+. scitex-repro has no zarr surface but the
+        # ecosystem-wide matrix is 3.11–3.13 (see skill leaf
+        # 02_package_11_ci-and-codecov.md).
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -24,9 +28,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install package + dev deps + test plugins
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install pytest pytest-cov pytest-timeout
-          pip install -e ".[dev]" || pip install -e .
+          pip install -e ".[all,dev]" || pip install -e ".[dev]" || pip install -e .
       - name: Lint with scitex-linter (non-fatal)
         # TODO: flip `continue-on-error: false` once existing EH001 / other
         # violations are addressed. Initially rolled out as advisory so the
@@ -36,20 +40,40 @@ jobs:
         run: |
           pip install scitex-linter || pip install git+https://github.com/ywatanabe1989/scitex-linter@develop
           scitex-linter check src/
-      - name: Detect import name
-        id: pkg
-        run: |
-          IMPORT_NAME=$(find src -maxdepth 2 -name __init__.py -printf '%h\n' | head -1 | xargs -n1 basename)
-          echo "import_name=${IMPORT_NAME}" >> "$GITHUB_OUTPUT"
       - name: Run tests with coverage
         run: |
           python -m pytest "$GITHUB_WORKSPACE/tests/" -v --tb=short --timeout=120 \
-            --cov=src/${{ steps.pkg.outputs.import_name }} \
+            --cov=src/scitex_repro \
             --cov-report=xml --cov-report=term
       - name: Upload coverage to Codecov
-        if: matrix.python-version == '3.12'
-        uses: codecov/codecov-action@v4
+        # `if: always()` keeps coverage flowing even when tests fail —
+        # otherwise Actions implicitly evaluates success() and skips the
+        # upload exactly when you most want to see the number.
+        if: always() && matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v5
         with:
-          files: coverage.xml
-          fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: false
+
+  install-check:
+    # Catches undeclared runtime deps that the package's own test suite
+    # misses. A package can build, upload, and pass its own tests with a
+    # wrong pyproject.toml — the bug only shows up when a fresh user runs
+    # `pip install <pkg>` in a clean venv. This job reproduces that path.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel
+      - name: Install + import in a fresh venv
+        run: |
+          python -m venv /tmp/clean-venv
+          /tmp/clean-venv/bin/pip install --upgrade pip
+          /tmp/clean-venv/bin/pip install dist/*.whl
+          /tmp/clean-venv/bin/python -c "import scitex_repro; print(f'OK: {scitex_repro.__name__}')"

@@ -89,6 +89,11 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-v --tb=short"
 
+[tool.coverage.run]
+parallel = true
+source = ["scitex_repro"]
+concurrency = ["multiprocessing", "thread"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py310"

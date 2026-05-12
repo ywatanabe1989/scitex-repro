@@ -19,4 +19,12 @@ env/
 .ruff_cache/
 htmlcov/
 .coverage
+.coverage.*
 *.log
+
+# Local scitex-dev runtime state — ignore by default, but track
+# the project-local audit whitelist so CI sees the same config.
+.scitex/*
+!.scitex/dev/
+.scitex/dev/*
+!.scitex/dev/config.yaml
