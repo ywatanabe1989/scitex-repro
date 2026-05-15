@@ -1,4 +1,4 @@
-name: Tests
+name: tests
 
 on:
   push:
@@ -55,25 +55,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           fail_ci_if_error: false
-
-  install-check:
-    # Catches undeclared runtime deps that the package's own test suite
-    # misses. A package can build, upload, and pass its own tests with a
-    # wrong pyproject.toml — the bug only shows up when a fresh user runs
-    # `pip install <pkg>` in a clean venv. This job reproduces that path.
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Build wheel
-        run: |
-          python -m pip install --upgrade pip build
-          python -m build --wheel
-      - name: Install + import in a fresh venv
-        run: |
-          python -m venv /tmp/clean-venv
-          /tmp/clean-venv/bin/pip install --upgrade pip
-          /tmp/clean-venv/bin/pip install dist/*.whl
-          /tmp/clean-venv/bin/python -c "import scitex_repro; print(f'OK: {scitex_repro.__name__}')"

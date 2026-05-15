@@ -14,12 +14,14 @@
 
 <!-- scitex-badges:start -->
 <p align="center">
-  <a href="https://pypi.org/project/scitex-repro/"><img src="https://img.shields.io/pypi/v/scitex-repro.svg" alt="PyPI"></a>
-  <a href="https://pypi.org/project/scitex-repro/"><img src="https://img.shields.io/pypi/pyversions/scitex-repro.svg" alt="Python"></a>
-  <a href="https://github.com/ywatanabe1989/scitex-repro/actions/workflows/test.yml"><img src="https://github.com/ywatanabe1989/scitex-repro/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
-  <a href="https://codecov.io/gh/ywatanabe1989/scitex-repro/branch/develop"><img src="https://codecov.io/gh/ywatanabe1989/scitex-repro/branch/develop/graph/badge.svg" alt="Coverage (develop)"></a>
-  <a href="https://scitex-repro.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/scitex-repro/badge/?version=latest" alt="Docs"></a>
-  <a href="https://www.gnu.org/licenses/agpl-3.0"><img src="https://img.shields.io/badge/license-AGPL_v3-blue.svg" alt="License: AGPL v3"></a>
+  <a href="https://pypi.org/project/scitex-repro/"><img src="https://img.shields.io/pypi/v/scitex-repro?label=pypi" alt="pypi"></a>
+  <a href="https://pypi.org/project/scitex-repro/"><img src="https://img.shields.io/pypi/pyversions/scitex-repro?label=python" alt="python"></a>
+  <a href="https://github.com/ywatanabe1989/scitex-repro/actions/workflows/rtd-sphinx-build-on-ubuntu-latest.yml"><img src="https://img.shields.io/github/actions/workflow/status/ywatanabe1989/scitex-repro/rtd-sphinx-build-on-ubuntu-latest.yml?branch=develop&label=docs" alt="docs"></a>
+</p>
+<p align="center">
+  <a href="https://github.com/ywatanabe1989/scitex-repro/actions/workflows/pytest-matrix-on-ubuntu-py3-11-3-12-3-13.yml"><img src="https://img.shields.io/github/actions/workflow/status/ywatanabe1989/scitex-repro/pytest-matrix-on-ubuntu-py3-11-3-12-3-13.yml?branch=develop&label=tests" alt="tests"></a>
+  <a href="https://github.com/ywatanabe1989/scitex-repro/actions/workflows/import-smoke-on-ubuntu-py3-12.yml"><img src="https://img.shields.io/github/actions/workflow/status/ywatanabe1989/scitex-repro/import-smoke-on-ubuntu-py3-12.yml?branch=develop&label=install-check" alt="install-check"></a>
+  <a href="https://codecov.io/gh/ywatanabe1989/scitex-repro"><img src="https://img.shields.io/codecov/c/github/ywatanabe1989/scitex-repro/develop?label=cov" alt="cov"></a>
 </p>
 <!-- scitex-badges:end -->
 
