@@ -1,8 +1,11 @@
 name: import-smoke
 
 # Catches "wheel installs but `import scitex_repro` blows up at runtime"
-# — separate from the full test suite so a broken entry-point fails
-# fast without paying for the matrix.
+# — separate from the full pytest suite so a broken entry-point fails
+# fast without paying for the matrix. Companion to `tests` — confirms
+# the bare package (no extras) is `pip install -e .`-able and
+# `import scitex_repro` succeeds. Catches `[project] dependencies`
+# drift that the test matrix masks because it installs `[all,dev]`.
 
 on:
   push:
@@ -10,7 +13,7 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-    - cron: "0 7 * * *"
+    - cron: "0 7 * * *"  # nightly 07:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -22,13 +25,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build wheel
+      - name: Install (no extras)
         run: |
-          python -m pip install --upgrade pip build
-          python -m build --wheel
-      - name: Install + import in a fresh venv
-        run: |
-          python -m venv /tmp/clean-venv
-          /tmp/clean-venv/bin/pip install --upgrade pip
-          /tmp/clean-venv/bin/pip install dist/*.whl
-          /tmp/clean-venv/bin/python -c "import scitex_repro; print(f'OK: {scitex_repro.__name__}')"
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install -e .
+      - name: Import smoke
+        run: .venv/bin/python -c "import scitex_repro; print(scitex_repro.__version__)"
