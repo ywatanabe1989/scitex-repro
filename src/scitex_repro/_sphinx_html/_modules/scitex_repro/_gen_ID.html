@@ -121,7 +121,7 @@
 
 <div class="viewcode-block" id="gen_id">
 <a class="viewcode-back" href="../../api/scitex_repro.html#scitex_repro.gen_id">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gen_id</span><span class="p">(</span><span class="n">time_format</span><span class="o">=</span><span class="s2">&quot;%YY-%mM-</span><span class="si">%d</span><span class="s2">D-%Hh%Mm%Ss&quot;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_id</span><span class="p">(</span><span class="n">time_format</span><span class="o">=</span><span class="s2">&quot;%YY-%mM-</span><span class="si">%d</span><span class="s2">D-%Hh%Mm%Ss&quot;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">now_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a unique identifier with timestamp and random characters.</span>
 
 <span class="sd">    Creates a unique ID by combining a formatted timestamp with random</span>
@@ -135,6 +135,11 @@
 <span class="sd">        which produces &quot;2025Y-05M-31D-12h30m45s&quot; format.</span>
 <span class="sd">    N : int, optional</span>
 <span class="sd">        Number of random characters to append. Default is 8.</span>
+<span class="sd">    now_fn : callable, optional</span>
+<span class="sd">        Zero-argument callable returning a `datetime`-like object with</span>
+<span class="sd">        `.strftime()`. Defaults to `datetime.now`. Injection point for</span>
+<span class="sd">        deterministic tests — pass a fake that returns a fixed datetime</span>
+<span class="sd">        instead of mocking `datetime` globally.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -155,7 +160,9 @@
 <span class="sd">    &gt;&gt;&gt; exp_id = gen_id()</span>
 <span class="sd">    &gt;&gt;&gt; save_path = f&quot;results/experiment_{exp_id}.pkl&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">now_str</span> <span class="o">=</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">time_format</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">now_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">now_fn</span> <span class="o">=</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">now</span>
+    <span class="n">now_str</span> <span class="o">=</span> <span class="n">now_fn</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">time_format</span><span class="p">)</span>
     <span class="n">rand_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="p">[</span><span class="n">_random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">_string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="n">_string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
     <span class="p">)</span>

@@ -119,11 +119,19 @@
 
 <div class="viewcode-block" id="gen_timestamp">
 <a class="viewcode-back" href="../../api/scitex_repro.html#scitex_repro.gen_timestamp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gen_timestamp</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gen_timestamp</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">now_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a timestamp string for file naming.</span>
 
 <span class="sd">    Returns a timestamp in the format YYYY-MMDD-HHMM, suitable for</span>
 <span class="sd">    creating unique filenames or version identifiers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    now_fn : callable, optional</span>
+<span class="sd">        Zero-argument callable returning a `datetime`-like object with</span>
+<span class="sd">        `.strftime()`. Defaults to `datetime.now`. Injection point for</span>
+<span class="sd">        deterministic tests — pass a fake that returns a fixed datetime</span>
+<span class="sd">        instead of mocking `datetime` globally.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -140,7 +148,9 @@
 <span class="sd">    &gt;&gt;&gt; print(filename)</span>
 <span class="sd">    &#39;experiment_2025-0531-1230.csv&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m</span><span class="si">%d</span><span class="s2">-%H%M&quot;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">now_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">now_fn</span> <span class="o">=</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">now</span>
+    <span class="k">return</span> <span class="n">now_fn</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m</span><span class="si">%d</span><span class="s2">-%H%M&quot;</span><span class="p">)</span></div>
 
 
 
