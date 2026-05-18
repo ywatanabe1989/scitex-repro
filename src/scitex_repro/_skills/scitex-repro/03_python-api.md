@@ -1,7 +1,8 @@
 ---
-name: python-api
-description: scitex-repro — Python API — see file body for details.
-tags: [scitex-repro, scitex-package]
+description: |
+  [TOPIC] Python Api
+  [DETAILS] scitex-repro — Python API — see file body for details.
+tags: [scitex-repro-python-api]
 ---
 
 <!-- 02_python-api.md -->

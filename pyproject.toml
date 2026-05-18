@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "scitex-repro"
-version = "0.1.4"
+version = "0.1.5"
 description = "Reproducibility utilities (random state, timestamps, hashing)"
 readme = "README.md"
 license = "AGPL-3.0-only"
@@ -47,10 +47,14 @@ torch = [
     "torch",
 ]
 dev = [
-    "scitex-dev",
+    "jax",
+    "jaxlib",
     "pytest",
     "pytest-cov",
     "ruff",
+    "scitex-dev>=0.11.7",
+    "tensorflow",
+    "torch",
 ]
 docs = [
     "sphinx>=7.0",
@@ -84,6 +88,11 @@ packages = ["src/scitex_repro"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-v --tb=short"
+
+[tool.coverage.run]
+parallel = true
+source = ["scitex_repro"]
+concurrency = ["multiprocessing", "thread"]
 
 [tool.ruff]
 line-length = 88

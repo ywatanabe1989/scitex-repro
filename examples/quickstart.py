@@ -6,10 +6,11 @@ import scitex_repro
 
 
 def main():
-    # 1. fix_seeds — deterministic random for python/numpy.
-    scitex_repro.fix_seeds(seed=42)
+    # 1. RandomStateManager — deterministic random for python/numpy/torch.
+    #    Constructing with `seed=…` seeds the global RNGs immediately.
+    scitex_repro.RandomStateManager(seed=42)
     a = np.random.rand(3)
-    scitex_repro.fix_seeds(seed=42)
+    scitex_repro.RandomStateManager(seed=42)
     b = np.random.rand(3)
     print("seeds reproducible:", np.allclose(a, b))
     assert np.allclose(a, b)

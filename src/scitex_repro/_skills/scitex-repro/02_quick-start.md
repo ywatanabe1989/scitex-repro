@@ -1,7 +1,8 @@
 ---
-name: quick-start
-description: scitex-repro — Quick Start — see file body for details.
-tags: [scitex-repro, scitex-package]
+description: |
+  [TOPIC] Quick Start
+  [DETAILS] scitex-repro — Quick Start — see file body for details.
+tags: [scitex-repro-quick-start]
 ---
 
 <!-- 01_quick-start.md -->

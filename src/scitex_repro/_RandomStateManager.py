@@ -110,8 +110,12 @@ class RandomStateManager:
                 fixed_modules.append("torch+cuda")
             else:
                 fixed_modules.append("torch")
-        except ImportError:
-            pass
+        except Exception as e:
+            # ImportError: torch not installed (silent skip).
+            # Anything else (e.g. CUDA driver mismatch, broken install): log
+            # at debug and skip. Auto-seed is best-effort — a misconfigured
+            # ML runtime should never block @stx.session for non-ML users.
+            logger.debug(f"torch seed skipped: {type(e).__name__}: {e}")
 
         # TensorFlow
         try:
@@ -119,8 +123,12 @@ class RandomStateManager:
 
             tf.random.set_seed(self.seed)
             fixed_modules.append("tensorflow")
-        except ImportError:
-            pass
+        except Exception as e:
+            # ImportError: tf not installed.
+            # google.protobuf.runtime_version.VersionError: gencode/runtime
+            #   protobuf mismatch — surfaced once, then swallowed so the
+            #   rest of session.start can proceed.
+            logger.debug(f"tensorflow seed skipped: {type(e).__name__}: {e}")
 
         # JAX (deferred import to avoid circular imports)
         try:
@@ -133,6 +141,22 @@ class RandomStateManager:
             # AttributeError: circular import in jax._src.clusters
             # RuntimeError: other jax initialization errors
             self._jax_key = None
+            pass
+
+        # Importing TensorFlow / PyTorch during the framework-seeding pass
+        # can consume numpy global entropy on first init (lazy variable
+        # creation, autotune probes). The first RandomStateManager(seed=N)
+        # then leaves numpy at state(seed=N + K_init); a second call leaves
+        # it at state(seed=N) because TF/torch are already imported and
+        # K_init = 0. That asymmetry breaks `np.allclose(a, b)` across two
+        # construction sites in user code (see examples/quickstart.py).
+        # Re-seeding numpy as the last step normalises the post-init state
+        # to seed=N regardless of whether frameworks were just imported.
+        try:
+            import numpy as _np
+
+            _np.random.seed(self.seed)
+        except ImportError:
             pass
 
         if verbose and fixed_modules:
@@ -295,14 +319,15 @@ class RandomStateManager:
         except ImportError:
             pass
 
-        # TensorFlow tensor
+        # TensorFlow tensor — catch any import-time failure (protobuf
+        # runtime version mismatch raises VersionError, not ImportError).
         try:
             import tensorflow as tf
 
             if isinstance(obj, (tf.Tensor, tf.Variable)):
                 obj_np = obj.numpy()
                 return hashlib.sha256(obj_np.tobytes()).hexdigest()[:32]
-        except ImportError:
+        except Exception:
             pass
 
         # JAX array
@@ -452,8 +477,11 @@ class RandomStateManager:
         """
         try:
             import torch
-        except ImportError:
-            raise ImportError("PyTorch not installed")
+        except Exception as e:
+            # ImportError: torch not installed.
+            # Anything else (e.g. CUDA driver mismatch, broken install)
+            # surfaces with the original message so the user can diagnose.
+            raise ImportError(f"PyTorch unavailable: {type(e).__name__}: {e}")
 
         if not hasattr(self, "_torch_generators"):
             self._torch_generators = {}

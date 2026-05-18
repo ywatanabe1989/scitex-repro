@@ -1,16 +1,17 @@
 ---
 name: scitex-repro
-description: Reproducibility helpers for scientific Python experiments — unified seeded random-state for `random`/`numpy`/`torch`/`tf`, experiment ID + timestamp generation, and deterministic hashing of numpy arrays. Public API (9 symbols) — random state (`RandomStateManager` — class that fixes seeds across `random`, `numpy.random`, `torch`, `tensorflow`, `os.environ[PYTHONHASHSEED]` in one call; `get(seed=42)` factory returning a configured instance; `reset(seed=None)` rewinds all RNGs), ID/timestamp generation (`gen_ID(n=8)`, `gen_id(n=8)` alias, `gen_timestamp()`, `timestamp()` alias — producing strings suitable for experiment/run directory names), array hashing (`hash_array(arr)` — deterministic hex digest of a numpy array's values for experiment fingerprinting), legacy shim (`fix_seeds(seed=...)` — deprecated wrapper kept for older scripts). No CLI, no MCP tools. Drop-in replacement for hand-rolled "seed all frameworks" functions (`random.seed` + `np.random.seed` + `torch.manual_seed` + `torch.cuda.manual_seed_all` + `tf.random.set_seed` boilerplate), ad-hoc timestamp strings via `datetime.now().strftime(...)` in run dirs, and bespoke `hashlib.sha256(arr.tobytes())` one-liners. Use whenever the user asks to "seed this experiment deterministically", "seed numpy and torch together", "generate an experiment ID for this run", "make an output folder name like 20261023_1530_abc12345", "hash a numpy array for reproducibility", "reset the RNG mid-experiment", or mentions `RandomStateManager`, `gen_ID`, `hash_array`, `scitex.repro`, seed-everything.
-user-invocable: false
+description: |
+  [WHAT] Reproducibility helpers for scientific Python experiments — unified seeded random-state for `random`/`numpy`/`torch`/`tf`, experiment ID + timestamp generation, and deterministic hashing of numpy arrays. Public API (9 symbols) — random state (`RandomStateManager` — class that fixes seeds across `random`, `numpy.random`, `torch`, `tensorflow`, `os.environ[PYTHONHASHSEED]` in one call…
+  [WHEN] Use whenever the user asks to "seed this experiment deterministically", "seed numpy and torch together", "generate an experiment ID for this run", "make an output folder name like 20261023_1530_abc12345", "hash a numpy array for reproducibility", "reset the RNG mid-experiment", or mentions `RandomStateManager`, `gen_ID`, `hash_array`, `scitex.
+  [HOW] repro`, seed-everything.
+tags: [scitex-repro]
 primary_interface: python
 interfaces:
   python: 3
   cli: 0
   mcp: 0
   skills: 2
-  hook: 0
   http: 0
-tags: [scitex-repro, scitex-package]
 ---
 
 # scitex-repro
@@ -49,12 +50,13 @@ rule and empirical verification table.
 
 ## Sub-skills
 
-- [01_quick-start.md](01_quick-start.md) — install, import, one snippet per area
-- [02_python-api.md](02_python-api.md) — full public symbol table with signatures
+- [01_installation.md](01_installation.md) — pip install + verify
+- [02_quick-start.md](02_quick-start.md) — install, import, one snippet per area
+- [03_python-api.md](03_python-api.md) — full public symbol table with signatures
 
 No CLI, no MCP tools.
 
 
 ## Environment
 
-- [03_env-vars.md](03_env-vars.md) — SCITEX_* env vars read by scitex-repro at runtime
+- [10_env-vars.md](10_env-vars.md) — SCITEX_* env vars read by scitex-repro at runtime

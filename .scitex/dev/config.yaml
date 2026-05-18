@@ -1,0 +1,16 @@
+# scitex-dev project-local config for scitex-repro.
+#
+# Tracked in git via the .gitignore exception:
+#   .scitex/*
+#   !.scitex/dev/
+#   .scitex/dev/*
+#   !.scitex/dev/config.yaml
+# so CI and local runs see the same audit whitelist.
+
+audit:
+  root-whitelist:
+    files:
+      # codecov.yml at repo root is the canonical SciTeX convention
+      # (see skill leaf 02_package_11_ci-and-codecov.md). It must live
+      # at the repo root for codecov.io to discover it.
+      - codecov.yml

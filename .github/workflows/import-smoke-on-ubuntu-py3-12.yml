@@ -1,0 +1,34 @@
+name: import-smoke
+
+# Catches "wheel installs but `import scitex_repro` blows up at runtime"
+# — separate from the full test suite so a broken entry-point fails
+# fast without paying for the matrix.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+jobs:
+  install-check:
+    name: import-smoke-on-ubuntu-py3-12
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel
+      - name: Install + import in a fresh venv
+        run: |
+          python -m venv /tmp/clean-venv
+          /tmp/clean-venv/bin/pip install --upgrade pip
+          /tmp/clean-venv/bin/pip install dist/*.whl
+          /tmp/clean-venv/bin/python -c "import scitex_repro; print(f'OK: {scitex_repro.__name__}')"
