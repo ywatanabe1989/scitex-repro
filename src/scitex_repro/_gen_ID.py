@@ -8,7 +8,7 @@ import string as _string
 from datetime import datetime as _datetime
 
 
-def gen_id(time_format="%YY-%mM-%dD-%Hh%Mm%Ss", N=8):
+def gen_id(time_format="%YY-%mM-%dD-%Hh%Mm%Ss", N=8, *, now_fn=None):
     """Generate a unique identifier with timestamp and random characters.
 
     Creates a unique ID by combining a formatted timestamp with random
@@ -22,6 +22,11 @@ def gen_id(time_format="%YY-%mM-%dD-%Hh%Mm%Ss", N=8):
         which produces "2025Y-05M-31D-12h30m45s" format.
     N : int, optional
         Number of random characters to append. Default is 8.
+    now_fn : callable, optional
+        Zero-argument callable returning a `datetime`-like object with
+        `.strftime()`. Defaults to `datetime.now`. Injection point for
+        deterministic tests — pass a fake that returns a fixed datetime
+        instead of mocking `datetime` globally.
 
     Returns
     -------
@@ -42,7 +47,9 @@ def gen_id(time_format="%YY-%mM-%dD-%Hh%Mm%Ss", N=8):
     >>> exp_id = gen_id()
     >>> save_path = f"results/experiment_{exp_id}.pkl"
     """
-    now_str = _datetime.now().strftime(time_format)
+    if now_fn is None:
+        now_fn = _datetime.now
+    now_str = now_fn().strftime(time_format)
     rand_str = "".join(
         [_random.choice(_string.ascii_letters + _string.digits) for i in range(N)]
     )

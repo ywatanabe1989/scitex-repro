@@ -1,372 +1,314 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: "2025-06-02 15:08:00 (ywatanabe)"
-# File: ./scitex_repo/tests/scitex/str/test__gen_ID.py
+# Time-stamp: "2026-05-18"
+# File: tests/scitex_repro/test__gen_ID.py
 
-"""Tests for unique ID generation functionality."""
+"""Tests for unique ID generation functionality.
 
-import os
+All tests follow the SciTeX no-mocks + AAA + single-assert testing
+discipline (see scitex general skills 02_package_12_no-mocks.md and
+02_package_13_test-quality.md). Deterministic-timestamp tests inject a
+hand-rolled `now_fn` fake rather than patching `datetime` globally.
+"""
+
 import re
+import string
+import time
 from datetime import datetime
-from unittest.mock import patch
 
 import pytest
 
+from scitex_repro import gen_id
 
-def test_gen_id_basic():
-    """Test basic ID generation."""
-    from scitex_repro import gen_id
 
+# ----- helpers ---------------------------------------------------------------
+
+def _fixed_now(year=2025, month=6, day=2, hour=15, minute=30, second=45):
+    """Return a zero-arg callable yielding the fixed datetime.
+
+    Honest fake — exposes only `.strftime(fmt)` because that is the
+    only method `gen_id` calls on `now_fn()`. No mock magic.
+    """
+    fixed = datetime(year, month, day, hour, minute, second)
+    return lambda: fixed
+
+
+# ----- basic format ----------------------------------------------------------
+
+def test_gen_id_default_output_contains_underscore_separator():
+    # Arrange
+    # (no inputs — default call)
+    # Act
     id_str = gen_id()
-
-    # Should contain underscore separator
+    # Assert
     assert "_" in id_str
 
-    # Should have timestamp and random parts
-    parts = id_str.split("_")
+
+def test_gen_id_default_output_splits_into_two_parts():
+    # Arrange
+    # (no inputs — default call)
+    # Act
+    parts = gen_id().split("_")
+    # Assert
     assert len(parts) == 2
 
-    # Random part should be 8 characters by default
-    assert len(parts[1]) == 8
 
-    # Random part should be alphanumeric
-    assert parts[1].isalnum()
+def test_gen_id_default_random_part_has_length_eight():
+    # Arrange
+    # (no inputs — default call)
+    # Act
+    random_part = gen_id().split("_")[1]
+    # Assert
+    assert len(random_part) == 8
 
 
-def test_gen_id_default_format():
-    """Test default timestamp format."""
-    from scitex_repro import gen_id
+def test_gen_id_default_random_part_is_alphanumeric():
+    # Arrange
+    # (no inputs — default call)
+    # Act
+    random_part = gen_id().split("_")[1]
+    # Assert
+    assert random_part.isalnum()
 
-    id_str = gen_id()
-    timestamp_part = id_str.split("_")[0]
 
-    # Should match format: YYYY-MM-DD-HHhMMmSSs
+# ----- default time format ---------------------------------------------------
+
+def test_gen_id_default_timestamp_matches_yymmdd_hms_pattern():
+    # Arrange
     pattern = r"\d{4}Y-\d{2}M-\d{2}D-\d{2}h\d{2}m\d{2}s"
+    # Act
+    timestamp_part = gen_id().split("_")[0]
+    # Assert
     assert re.match(pattern, timestamp_part)
 
 
-def test_gen_id_custom_time_format():
-    """Test custom timestamp format."""
-    from scitex_repro import gen_id
+# ----- custom time format ----------------------------------------------------
 
-    # Test simple format
-    id_str = gen_id(time_format="%Y%m%d")
-    timestamp_part = id_str.split("_")[0]
-
-    # Should be 8 digits (YYYYMMDD)
+def test_gen_id_with_short_format_returns_eight_digit_timestamp_length():
+    # Arrange
+    fmt = "%Y%m%d"
+    # Act
+    timestamp_part = gen_id(time_format=fmt).split("_")[0]
+    # Assert
     assert len(timestamp_part) == 8
+
+
+def test_gen_id_with_short_format_returns_only_digits_in_timestamp():
+    # Arrange
+    fmt = "%Y%m%d"
+    # Act
+    timestamp_part = gen_id(time_format=fmt).split("_")[0]
+    # Assert
     assert timestamp_part.isdigit()
 
-    # Test another format
-    id_str = gen_id(time_format="%Y-%m-%d_%H:%M")
-    timestamp_part = id_str.split("_")[0]
 
-    # Should match YYYY-MM-DD format (before underscore)
+def test_gen_id_with_dashed_format_matches_iso_prefix_pattern():
+    # Arrange
+    fmt = "%Y-%m-%d_%H:%M"
     pattern = r"\d{4}-\d{2}-\d{2}"
+    # Act
+    timestamp_part = gen_id(time_format=fmt).split("_")[0]
+    # Assert
     assert re.match(pattern, timestamp_part)
 
 
-def test_gen_id_custom_random_length():
-    """Test custom random string length."""
-    from scitex_repro import gen_id
+# ----- custom random length --------------------------------------------------
 
-    # Test different lengths
-    for n in [1, 4, 16, 32]:
-        id_str = gen_id(N=n)
-        random_part = id_str.split("_")[1]
-        assert len(random_part) == n
-        assert random_part.isalnum()
+@pytest.mark.parametrize("n", [1, 4, 16, 32])
+def test_gen_id_random_part_length_matches_requested_n(n):
+    # Arrange
+    requested = n
+    # Act
+    random_part = gen_id(N=requested).split("_")[1]
+    # Assert
+    assert len(random_part) == requested
 
 
-def test_gen_id_zero_random_length():
-    """Test with zero random characters."""
-    from scitex_repro import gen_id
+@pytest.mark.parametrize("n", [1, 4, 16, 32])
+def test_gen_id_random_part_is_alphanumeric_for_various_n(n):
+    # Arrange
+    requested = n
+    # Act
+    random_part = gen_id(N=requested).split("_")[1]
+    # Assert
+    assert random_part.isalnum()
 
+
+# ----- zero random length ----------------------------------------------------
+
+def test_gen_id_with_zero_n_ends_with_underscore():
+    # Arrange
+    # (no inputs)
+    # Act
     id_str = gen_id(N=0)
-
-    # Should still have underscore but empty random part
+    # Assert
     assert id_str.endswith("_")
-    parts = id_str.split("_")
-    assert len(parts) == 2
+
+
+def test_gen_id_with_zero_n_splits_into_two_parts_with_empty_random():
+    # Arrange
+    # (no inputs)
+    # Act
+    parts = gen_id(N=0).split("_")
+    # Assert
     assert parts[1] == ""
 
 
-def test_gen_id_uniqueness():
-    """Test that generated IDs are unique."""
-    from scitex_repro import gen_id
+# ----- uniqueness ------------------------------------------------------------
 
-    ids = [gen_id() for _ in range(100)]
+def test_gen_id_generates_unique_ids_across_one_hundred_calls():
+    # Arrange
+    n_samples = 100
+    # Act
+    ids = [gen_id() for _ in range(n_samples)]
+    # Assert
+    assert len(set(ids)) == n_samples
 
-    # All IDs should be unique
-    assert len(set(ids)) == len(ids)
 
+# ----- random character composition -----------------------------------------
 
-def test_gen_id_random_characters():
-    """Test random character composition."""
-    import string
-
-    from scitex_repro import gen_id
-
-    # Generate many IDs to test character set
-    ids = [gen_id(N=50) for _ in range(10)]
-
+def test_gen_id_random_part_uses_only_ascii_letters_and_digits():
+    # Arrange
     valid_chars = set(string.ascii_letters + string.digits)
-
-    for id_str in ids:
-        random_part = id_str.split("_")[1]
-        random_chars = set(random_part)
-
-        # All characters should be valid
-        assert random_chars.issubset(valid_chars)
+    sample = gen_id(N=200)
+    # Act
+    random_chars = set(sample.split("_")[1])
+    # Assert
+    assert random_chars.issubset(valid_chars)
 
 
-@patch("scitex_repro._gen_ID._datetime")
-def test_gen_id_deterministic_timestamp(mock_datetime):
-    """Test with mocked datetime for deterministic testing."""
-    from scitex_repro import gen_id
+# ----- deterministic timestamp via injected now_fn (no mocks) ---------------
 
-    # Mock a specific datetime
-    mock_time = datetime(2025, 6, 2, 15, 30, 45)
-    mock_datetime.now.return_value = mock_time
-
-    # Test default format
-    id_str = gen_id()
-    timestamp_part = id_str.split("_")[0]
-    expected = "2025Y-06M-02D-15h30m45s"
-    assert timestamp_part == expected
-
-    # Test custom format
-    id_str = gen_id(time_format="%Y%m%d_%H%M%S")
-    timestamp_part = id_str.split("_")[0]
-    expected = "20250602"  # Only first part before underscore
-    assert timestamp_part == expected
+def test_gen_id_uses_injected_now_fn_for_default_format():
+    # Arrange
+    now_fn = _fixed_now(2025, 6, 2, 15, 30, 45)
+    # Act
+    timestamp_part = gen_id(now_fn=now_fn).split("_")[0]
+    # Assert
+    assert timestamp_part == "2025Y-06M-02D-15h30m45s"
 
 
-def test_gen_id_backward_compatibility():
-    """Test backward compatibility alias."""
-    from scitex_repro import gen_ID, gen_id
-
-    # gen_ID should be the same function
-    assert gen_ID is gen_id
-
-    # Should work the same way
-    id1 = gen_id()
-    id2 = gen_ID()
-
-    # Both should have same format
-    assert "_" in id1
-    assert "_" in id2
-    assert len(id1.split("_")[1]) == 8
-    assert len(id2.split("_")[1]) == 8
+def test_gen_id_uses_injected_now_fn_for_custom_short_format():
+    # Arrange
+    now_fn = _fixed_now(2025, 6, 2, 15, 30, 45)
+    # Act
+    timestamp_part = gen_id(time_format="%Y%m%d_%H%M%S", now_fn=now_fn).split("_")[0]
+    # Assert
+    assert timestamp_part == "20250602"
 
 
-def test_gen_id_time_precision():
-    """Test that IDs are unique even with rapid generation."""
-    import time
+# ----- backward-compatibility alias ------------------------------------------
 
-    from scitex_repro import gen_id
+def test_gen_id_legacy_alias_is_same_function_object():
+    # Arrange
+    from scitex_repro import gen_ID
+    # Act
+    is_alias = gen_ID is gen_id
+    # Assert
+    assert is_alias
 
-    # Generate multiple IDs rapidly
+
+def test_gen_id_legacy_alias_produces_underscore_separated_output():
+    # Arrange
+    from scitex_repro import gen_ID
+    # Act
+    id_str = gen_ID()
+    # Assert
+    assert "_" in id_str
+
+
+def test_gen_id_legacy_alias_produces_default_eight_char_random_part():
+    # Arrange
+    from scitex_repro import gen_ID
+    # Act
+    random_part = gen_ID().split("_")[1]
+    # Assert
+    assert len(random_part) == 8
+
+
+# ----- rapid generation precision -------------------------------------------
+
+def test_gen_id_rapid_calls_produce_unique_ids_via_random_suffix():
+    # Arrange
+    n_samples = 10
+    # Act
     ids = []
-    for _ in range(10):
+    for _ in range(n_samples):
         ids.append(gen_id(time_format="%Y%m%d_%H%M%S"))
-        time.sleep(0.01)  # Very short delay
-
-    # All IDs should be unique (due to random parts even if timestamps same)
-    assert len(set(ids)) == len(ids)
-
-    # All should have proper format
-    for id_str in ids:
-        parts = id_str.split("_")
-        assert len(parts) >= 2  # timestamp_random (timestamp may have more underscores)
-        assert parts[-1].isalnum()  # random part should be alphanumeric
-        assert len(parts[-1]) == 8  # default random length
+        time.sleep(0.005)
+    # Assert
+    assert len(set(ids)) == n_samples
 
 
-def test_gen_id_empty_time_format():
-    """Test with empty time format."""
-    from scitex_repro import gen_id
+def test_gen_id_rapid_calls_keep_default_eight_char_random_suffix():
+    # Arrange
+    n_samples = 10
+    # Act
+    ids = [gen_id(time_format="%Y%m%d_%H%M%S") for _ in range(n_samples)]
+    suffix_lengths = {len(i.split("_")[-1]) for i in ids}
+    # Assert
+    assert suffix_lengths == {8}
 
-    id_str = gen_id(time_format="")
 
-    # Should have empty timestamp part but still have structure
-    parts = id_str.split("_")
-    assert len(parts) == 2
+# ----- empty / special time formats -----------------------------------------
+
+def test_gen_id_with_empty_time_format_has_empty_timestamp_part():
+    # Arrange
+    fmt = ""
+    # Act
+    parts = gen_id(time_format=fmt).split("_")
+    # Assert
     assert parts[0] == ""
+
+
+def test_gen_id_with_empty_time_format_preserves_random_part_length():
+    # Arrange
+    fmt = ""
+    # Act
+    parts = gen_id(time_format=fmt).split("_")
+    # Assert
     assert len(parts[1]) == 8
 
 
-def test_gen_id_special_time_format():
-    """Test with special characters in time format."""
-    from scitex_repro import gen_id
-
-    # Test format with special characters
-    id_str = gen_id(time_format="exp-%Y-%m-%d")
-    timestamp_part = id_str.split("_")[0]
-
+def test_gen_id_special_time_format_preserves_prefix_literal_chars():
+    # Arrange
+    fmt = "exp-%Y-%m-%d"
+    # Act
+    timestamp_part = gen_id(time_format=fmt).split("_")[0]
+    # Assert
     assert timestamp_part.startswith("exp-")
-    assert re.match(r"exp-\d{4}-\d{2}-\d{2}", timestamp_part)
 
 
-def test_gen_id_large_random_length():
-    """Test with large random string length."""
-    from scitex_repro import gen_id
+def test_gen_id_special_time_format_matches_combined_prefix_pattern():
+    # Arrange
+    fmt = "exp-%Y-%m-%d"
+    pattern = r"exp-\d{4}-\d{2}-\d{2}"
+    # Act
+    timestamp_part = gen_id(time_format=fmt).split("_")[0]
+    # Assert
+    assert re.match(pattern, timestamp_part)
 
-    id_str = gen_id(N=1000)
-    random_part = id_str.split("_")[1]
 
-    assert len(random_part) == 1000
+# ----- large random length --------------------------------------------------
+
+def test_gen_id_with_large_n_returns_correct_random_part_length():
+    # Arrange
+    n_chars = 1000
+    # Act
+    random_part = gen_id(N=n_chars).split("_")[1]
+    # Assert
+    assert len(random_part) == n_chars
+
+
+def test_gen_id_with_large_n_random_part_is_alphanumeric():
+    # Arrange
+    n_chars = 1000
+    # Act
+    random_part = gen_id(N=n_chars).split("_")[1]
+    # Assert
     assert random_part.isalnum()
 
 
 if __name__ == "__main__":
     import os
-
-    import pytest
-
     pytest.main([os.path.abspath(__file__)])
-
-# --------------------------------------------------------------------------------
-# Start of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/repro/_gen_ID.py
-# --------------------------------------------------------------------------------
-# #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-
-# # Time-stamp: "2024-11-07 17:53:38 (ywatanabe)"
-# # File: ./scitex_repo/src/scitex/repro/_gen_ID.py
-#
-# import random as _random
-# import string as _string
-# from datetime import datetime as _datetime
-#
-#
-# def gen_id(time_format="%YY-%mM-%dD-%Hh%Mm%Ss", N=8):
-#     """Generate a unique identifier with timestamp and random characters.
-#
-#     Creates a unique ID by combining a formatted timestamp with random
-#     alphanumeric characters. Useful for creating unique experiment IDs,
-#     run identifiers, or temporary file names.
-#
-#     Parameters
-#     ----------
-#     time_format : str, optional
-#         Format string for timestamp portion. Default is "%YY-%mM-%dD-%Hh%Mm%Ss"
-#         which produces "2025Y-05M-31D-12h30m45s" format.
-#     N : int, optional
-#         Number of random characters to append. Default is 8.
-#
-#     Returns
-#     -------
-#     str
-#         Unique identifier in format "{timestamp}_{random_chars}"
-#
-#     Examples
-#     --------
-#     >>> id1 = gen_id()
-#     >>> print(id1)
-#     '2025Y-05M-31D-12h30m45s_a3Bc9xY2'
-#
-#     >>> id2 = gen_id(time_format="%Y%m%d", N=4)
-#     >>> print(id2)
-#     '20250531_xY9a'
-#
-#     >>> # For experiment tracking
-#     >>> exp_id = gen_id()
-#     >>> save_path = f"results/experiment_{exp_id}.pkl"
-#     """
-#     now_str = _datetime.now().strftime(time_format)
-#     rand_str = "".join(
-#         [_random.choice(_string.ascii_letters + _string.digits) for i in range(N)]
-#     )
-#     return now_str + "_" + rand_str
-#
-#
-# # Backward compatibility
-# gen_ID = gen_id  # Deprecated: use gen_id instead
-#
-#
-# # ================================================================================
-# # Example Usage
-# # ================================================================================
-# def parse_args():
-#     """Parse command line arguments."""
-#     import argparse
-#
-#     parser = argparse.ArgumentParser(description="Demonstrate ID generation")
-#     parser.add_argument(
-#         "--format",
-#         type=str,
-#         default="%YY-%mM-%dD-%Hh%Mm%Ss",
-#         help="Time format (default: %%YY-%%mM-%%dD-%%Hh%%Mm%%Ss)",
-#     )
-#     parser.add_argument(
-#         "--length", type=int, default=8, help="Random string length (default: 8)"
-#     )
-#     return parser.parse_args()
-#
-#
-# def main(args):
-#     """Main execution function.
-#
-#     Demonstrates ID generation with different formats.
-#     """
-#     print(f"\n{'=' * 60}")
-#     print("ID Generation Demo")
-#     print(f"{'=' * 60}")
-#
-#     # Generate with default format
-#     print(f"\n{'Default Format':-^60}")
-#     id1 = gen_id()
-#     print(f"Generated ID: {id1}")
-#
-#     # Generate with custom format
-#     print(f"\n{'Custom Format':-^60}")
-#     id2 = gen_id(time_format=args.format, N=args.length)
-#     print(f"Format: {args.format}")
-#     print(f"Length: {args.length}")
-#     print(f"Generated ID: {id2}")
-#
-#     # Generate multiple IDs
-#     print(f"\n{'Multiple IDs':-^60}")
-#     ids = [gen_id(N=4) for _ in range(5)]
-#     for i, id_str in enumerate(ids, 1):
-#         print(f"{i}. {id_str}")
-#
-#     print(f"\n{'=' * 60}")
-#     print("Demo completed successfully!")
-#     print(f"{'=' * 60}\n")
-#
-#     return 0
-#
-#
-# if __name__ == "__main__":
-#     import sys
-#     import matplotlib.pyplot as plt
-#     import scitex as stx
-#
-#     args = parse_args()
-#
-#     CONFIG, sys.stdout, sys.stderr, plt, CC, rng = stx.session.start(
-#         sys,
-#         plt,
-#         args=args,
-#         file=__file__,
-#         sdir_suffix="gen_ID_demo",
-#         verbose=True,
-#         agg=True,
-#     )
-#
-#     exit_status = main(args)
-#
-#     stx.session.close(
-#         CONFIG,
-#         verbose=True,
-#         notify=False,
-#         message="ID generation demo completed",
-#         exit_status=exit_status,
-#     )
-#
-# # EOF
-
-# --------------------------------------------------------------------------------
-# End of Source Code from: /home/ywatanabe/proj/scitex-code/src/scitex/repro/_gen_ID.py
-# --------------------------------------------------------------------------------
