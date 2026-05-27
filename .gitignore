@@ -29,5 +29,12 @@ htmlcov/
 .scitex/dev/*
 !.scitex/dev/config.yaml
 
+# Runtime state under .scitex/<pkg>/runtime/ — everything regenerable is
+# gitignored, but the seed files (.gitkeep, README.md) are tracked so the
+# directory exists on fresh clones.
+.scitex/*/runtime/*
+!.scitex/*/runtime/.gitkeep
+!.scitex/*/runtime/README.md
+
 # Sphinx local build output (the in-wheel src/<pkg>/_sphinx_html bundle IS tracked)
 docs/sphinx/_build/
