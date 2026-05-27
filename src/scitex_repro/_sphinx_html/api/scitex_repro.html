@@ -3,20 +3,20 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>scitex_repro &mdash; SciTeX Repro v0.1.4</title>
+  <title>scitex_repro &mdash; SciTeX Repro v0.1.6</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=6e0256f3"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -119,7 +119,7 @@
 - Array hashing (hash_array)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="scitex_repro.gen_ID">
-<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">gen_ID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%YY-%mM-%dD-%Hh%Mm%Ss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scitex_repro.gen_ID" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">gen_ID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%YY-%mM-%dD-%Hh%Mm%Ss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scitex_repro.gen_ID" title="Link to this definition"></a></dt>
 <dd><p>Generate a unique identifier with timestamp and random characters.</p>
 <p>Creates a unique ID by combining a formatted timestamp with random
 alphanumeric characters. Useful for creating unique experiment IDs,
@@ -165,7 +165,7 @@ instead of mocking <cite>datetime</cite> globally.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="scitex_repro.gen_id">
-<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">gen_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%YY-%mM-%dD-%Hh%Mm%Ss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_repro/_gen_ID.html#gen_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_repro.gen_id" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">gen_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%YY-%mM-%dD-%Hh%Mm%Ss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_repro/_gen_ID.html#gen_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_repro.gen_id" title="Link to this definition"></a></dt>
 <dd><p>Generate a unique identifier with timestamp and random characters.</p>
 <p>Creates a unique ID by combining a formatted timestamp with random
 alphanumeric characters. Useful for creating unique experiment IDs,
@@ -211,7 +211,7 @@ instead of mocking <cite>datetime</cite> globally.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="scitex_repro.gen_timestamp">
-<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">gen_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_repro/_gen_timestamp.html#gen_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_repro.gen_timestamp" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">gen_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_repro/_gen_timestamp.html#gen_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_repro.gen_timestamp" title="Link to this definition"></a></dt>
 <dd><p>Generate a timestamp string for file naming.</p>
 <p>Returns a timestamp in the format YYYY-MMDD-HHMM, suitable for
 creating unique filenames or version identifiers.</p>
@@ -246,7 +246,7 @@ instead of mocking <cite>datetime</cite> globally.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="scitex_repro.timestamp">
-<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scitex_repro.timestamp" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">now_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scitex_repro.timestamp" title="Link to this definition"></a></dt>
 <dd><p>Generate a timestamp string for file naming.</p>
 <p>Returns a timestamp in the format YYYY-MMDD-HHMM, suitable for
 creating unique filenames or version identifiers.</p>
@@ -311,7 +311,7 @@ verifying data integrity and reproducibility.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="scitex_repro.RandomStateManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">RandomStateManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_repro/_RandomStateManager.html#RandomStateManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_repro.RandomStateManager" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">scitex_repro.</span></span><span class="sig-name descname"><span class="pre">RandomStateManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scitex_repro/_RandomStateManager.html#RandomStateManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scitex_repro.RandomStateManager" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Simple, robust random state manager for scientific computing.</p>
 <div class="admonition-examples admonition">
