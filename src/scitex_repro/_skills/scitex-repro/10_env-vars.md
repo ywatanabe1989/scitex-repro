@@ -9,7 +9,7 @@ tags: [scitex-repro-env-vars]
 
 | Variable | Purpose | Default | Type |
 |---|---|---|---|
-| `SCITEX_DIR` | Base SciTeX data / cache directory (shared across ecosystem). Used for resolving reproducibility artefacts. | `~/.scitex` | path |
+| `SCITEX_DIR` | Base SciTeX data / cache directory (shared across ecosystem). RNG verification cache and checkpoints live under ``$SCITEX_DIR/repro/runtime/rng`` (or ``~/.scitex/repro/runtime/rng`` when unset). | `~/.scitex` | path |
 
 ## Notes
 
