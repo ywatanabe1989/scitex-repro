@@ -104,3 +104,7 @@ ignore = ["E501"]
 
 [tool.scitex-linter]
 library_dirs = ["src", "tests", "examples"]
+
+dependencies = [
+    "scitex-dev>=0.17.8",
+]
