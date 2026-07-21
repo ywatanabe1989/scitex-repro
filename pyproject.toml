@@ -65,6 +65,8 @@ docs = [
 ]
 all = [
     "scitex-repro[jax]",
+    "scitex-repro[dev]",
+    "scitex-repro[docs]",
     "scitex-repro[tensorflow]",
     "scitex-repro[torch]",
 ]
