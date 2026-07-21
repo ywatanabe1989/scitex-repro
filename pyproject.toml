@@ -46,7 +46,7 @@ tensorflow = [
 torch = [
     "torch",
 ]
-_dev = [
+dev = [
     "jax",
     "jaxlib",
     "pytest",
@@ -56,7 +56,7 @@ _dev = [
     "tensorflow",
     "torch",
 ]
-_docs = [
+docs = [
     "sphinx>=7.0",
     "sphinx-rtd-theme>=2.0",
     "myst-parser>=2.0",
@@ -65,6 +65,8 @@ _docs = [
 ]
 all = [
     "scitex-repro[jax]",
+    "scitex-repro[dev]",
+    "scitex-repro[docs]",
     "scitex-repro[tensorflow]",
     "scitex-repro[torch]",
 ]
